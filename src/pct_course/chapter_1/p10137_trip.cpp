@@ -16,8 +16,8 @@ int main() {
     // For each Trip
     while(cin >> studentCount && studentCount != 0){
         double expenses[studentCount];
-        double sum = 0, owers = 0, benef = 0;
-        double average;
+        double sum = 0, average;
+        int owers = 0, benef = 0;
 
         for(int i = 0; i<studentCount; i++){
             double expense;
@@ -39,10 +39,6 @@ int main() {
 
         int minAmount = owers > benef ? owers : benef;
         printf("$%.2f\n", minAmount/100.0);
-
-        // Reset for next iteration
-        sum = 0;
-
     }
 
     

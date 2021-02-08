@@ -1,18 +1,24 @@
-//
-// Created by AndiSwiss on 10.10.20.
-//
+/*
+ *  Created by AndiSwiss on 10.10.20
+ *  https://github.com/AndiSwiss
+ */
+
 
 #include "string_in_out_testing.h"
 #include <iostream>
 #include <unistd.h>
 #include <fstream>
+#include <chrono>
 
 
 string sub_path, in_name, out_name, expected_name;    // Initialized in prepare_ide()
 int old_stdin, old_stdout;
 
+// Variables to save time stamps; They have to be initialized here because of the auto-type:
+auto start = chrono::high_resolution_clock::now();
+auto stop = chrono::high_resolution_clock::now();
 
-/*
+/**
  * - Construct the used filenames
  * - Replacing cin and/or cout:
  *   - with freopen(...):
@@ -65,13 +71,20 @@ void prepare_ide(const string &problem_no, int file_no) {
     if (!freopen(out_name.c_str(), "w", stdout)) {
         throw runtime_error("Problems reading from file " + out_name);
     }
+    
+    // Start the code timer:
+    start = chrono::high_resolution_clock::now();
 }
 
 
-/*
+/**
  * Compares p**_expected*.txt (expected) with p**_output*.txt (actual)
  */
 void execute_tests() {
+
+    // Stop the timer:
+    stop = chrono::high_resolution_clock::now();
+    
     /*
      * Recreate the standard output to the terminal:
      * https://stackoverflow.com/questions/1908687/how-to-redirect-the-output-back-to-the-screen-after-freopenout-txt-a-stdo/1910044#1910044
@@ -170,9 +183,20 @@ void execute_tests() {
 
     out_file.close();
     expected_file.close();
+
+    // Subtract stop and start time-points and cast it to required unit. 
+    // Predefined units are: nanoseconds, microseconds, milliseconds, seconds, minutes, hours.
+    // Use duration_cast() function: 
+    long int micro = chrono::duration_cast<chrono::microseconds>(stop - start).count();
+    long int milli = micro / 1000;
+    micro %= 1000;
+    cout << "Execution time for actual code: ";
+    if (milli) cout << milli << "'";
+    cout << micro << " microseconds" << endl;
 }
 
-/*
+
+/**
  * Helper method for writing colored text to the terminal.
  * Color: possible values: see enum in the beginning of this file
  * Default color is red (as defined in the signature of this method in the beginning of this file)
