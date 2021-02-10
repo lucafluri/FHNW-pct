@@ -18,7 +18,7 @@ using namespace std;
 
 void printVector(vector<int> vec){
     for(int i : vec){
-        printf("%d ", i);
+        cout << i << " ";
     }cout << endl;
 }
 
@@ -35,9 +35,15 @@ vector<int> countVotes(vector<int> (&ballots)[1000], int n){
 
 vector<int> getWinners(vector<int> &counts, int ballotCount){
     vector<int> winners;
+    int discarded = 0;
     float maxPerc = 0.0;
+    for(int i = 0; i<counts.size(); i++){
+        if(counts[i] == 0) discarded++;
+    }
+    // cout << discarded-1 << endl;
+
     for(int i = 1; i<counts.size(); i++){
-        float p = (counts[i]/(float) ballotCount);
+        float p = (counts[i]/((float) ballotCount));
         if(counts[i] != 0 && p > maxPerc && (p > 0.5)) {
             maxPerc = p;
             winners.clear();
@@ -48,12 +54,12 @@ vector<int> getWinners(vector<int> &counts, int ballotCount){
     // Check for tie
     if(winners.size() == 0){
         for(int i = 1; i<counts.size(); i++){
-            float p = (counts[i]/(float) ballotCount);
-            if(counts[i] != 0 && p == (1/(float) ballotCount)) {
+            float p = (counts[i]/((float) ballotCount));
+            if(counts[i] != 0 && p == (1/((float) counts.size()-discarded))) {
                 winners.push_back(i);
             }
         }
-        if(winners.size() != ballotCount) winners.clear();
+        if(winners.size() != counts.size()-discarded) winners.clear();
     }
     
     return winners;
@@ -79,20 +85,21 @@ vector<int> findLowest(vector<int> &counts){
     return lowest;
 }
 
-void delVotesLowest(vector<int> (&ballots)[1000], vector<int> lowest){
-    for(int j = 0; j<1000; j++){
+void delVotesLowest(vector<int> (&ballots)[1000], vector<int> lowest, int ballotCount){
+    for(int j = 0; j<ballotCount; j++){
         // vector<int> ballot = ballots[j];
-        for(int i = 0; i<ballots[j].size(); i++){
-            for(int c : lowest){
+        // delete candidate
+        for(int c : lowest){
+            for(int i = 0; i<ballots[j].size(); i++){
                 if(ballots[j][i] == c) {
                     ballots[j][i] = 0;
 
                     ballots[j].erase(ballots[j].begin() + i);
                     ballots[j].push_back(0);
+                    break;
                 }
             }
-            
-        }
+        }    
     }
 }
 
@@ -141,6 +148,17 @@ int main() {
             getline(cin, tmp);
         }
 
+        // // TODO
+        // if(i==19){
+        //     printf("%d\n", n);
+        //     for(string c : candidates){
+        //         cout << c << endl;
+        //     }
+        //     for(int i = 0; i<ballotCount; i++){
+        //         printVector(ballots[i]);
+        //     }
+        // }
+
         vector<int> winners;
         while(winners.size() == 0){
             vector<int> counts = countVotes(ballots, n);
@@ -148,14 +166,17 @@ int main() {
             if(winners.size()>0) break;
 
             vector<int> lowest = findLowest(counts);
-            delVotesLowest(ballots, lowest);
+            delVotesLowest(ballots, lowest, ballotCount);
 
-            // printVector(counts);
-            // printVector(lowest);
-            // for(int i = 0; i<ballotCount; i++){
-            //     printVector(ballots[i]);
-            // }
+            printVector(counts);
+            printVector(lowest);
+            cout << "============================="<< endl;
+            for(int i = 0; i<ballotCount; i++){
+                printVector(ballots[i]);
+            }
             // printVector(winners);
+            cout << "============================="<< endl;
+
         }
 
 
