@@ -1,9 +1,3 @@
-Harry S. Truman
-Franklin D. Roosevelt
-James Buchanan
+John Doe
 
-Barack Obama
-
-Harry S. Truman
-Franklin D. Roosevelt
-James Buchanan
+John Doe

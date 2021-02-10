@@ -98,6 +98,7 @@ void delVotesLowest(vector<int> (&ballots)[1001], vector<int> lowest, int ballot
     }
 }
 
+
 int main() {
     prepare_ide("p10142");     // For IDE only
 
@@ -105,44 +106,46 @@ int main() {
 
     string tmp;
 
-    getline(cin, tmp);
-    cases = stoi(tmp);
-    getline(cin, tmp); //discard spacer line
+    // getline(cin, tmp);
+    // cases = stoi(tmp);
+    cin >> cases;
+    if(cases == 0) return 0;
+    while(getchar()!='\n');
+    while(getchar()!='\n');
+    // getline(cin, tmp); //discard spacer line
 
-    
     int n; //#candidates
     string candidates[20];
 
-    
     // per case
     for(int i = 0; i<cases; i++){
-        getline(cin, tmp);
-        n = stoi(tmp);
+        int ballotCount = 0;
+        vector<int> ballots[1001];
+        int vote;
+        bool hasVotes = false;
+
+        cin >> n;
+        while(getchar()!='\n');
+        if(n == 0) continue;
         // Read candidates
         for(int i = 0; i<n; i++){
             getline(cin, candidates[i]);
         }
 
-        int ballotCount = 0;
-        vector<int> ballots[1001];
-        int vote;
-        // bool eof = false;
-        bool hasVotes = false;
 
-        if(!cin.eof()){
-            getline(cin, tmp);  
-            while(!tmp.empty() && ballotCount < 1000){
-                hasVotes = true;
-                stringstream votes(tmp);
-                for(int i = 0; i<n;i++){
-                    votes >> vote;
-                    ballots[ballotCount].push_back(vote);
-                }
-                ballotCount++;
-                if(cin.eof()) break;
-                getline(cin, tmp);
+        getline(cin, tmp);  
+        while(!tmp.empty()){
+            hasVotes = true;
+            stringstream votes(tmp);
+            for(int i = 0; i<n;i++){
+                votes >> vote;
+                ballots[ballotCount].push_back(vote);
             }
+            ballotCount++;
+            if(cin.eof()) break;
+            getline(cin, tmp);
         }
+        
         
 
         if(hasVotes){
