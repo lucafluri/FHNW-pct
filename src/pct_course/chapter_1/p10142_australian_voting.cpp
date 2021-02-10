@@ -38,13 +38,24 @@ vector<int> getWinners(vector<int> &counts, int ballotCount){
     float maxPerc = 0.0;
     for(int i = 1; i<counts.size(); i++){
         float p = (counts[i]/(float) ballotCount);
-        if(counts[i] != 0 && p > 0.5 && p > maxPerc) {
+        if(counts[i] != 0 && p > maxPerc && (p > 0.5)) {
             maxPerc = p;
             winners.clear();
             winners.push_back(i);
         }
         else if(counts[i] != 0 && p == maxPerc) winners.push_back(i);
     }
+    // Check for tie
+    if(winners.size() == 0){
+        for(int i = 1; i<counts.size(); i++){
+            float p = (counts[i]/(float) ballotCount);
+            if(counts[i] != 0 && p == (1/(float) ballotCount)) {
+                winners.push_back(i);
+            }
+        }
+        if(winners.size() != ballotCount) winners.clear();
+    }
+    
     return winners;
 }
 
@@ -139,8 +150,8 @@ int main() {
             vector<int> lowest = findLowest(counts);
             delVotesLowest(ballots, lowest);
 
-            printVector(counts);
-            printVector(lowest);
+            // printVector(counts);
+            // printVector(lowest);
             // for(int i = 0; i<ballotCount; i++){
             //     printVector(ballots[i]);
             // }
@@ -150,7 +161,7 @@ int main() {
 
         printWinners(winners, candidates);
         // cout << n << " " << ballotCount << endl;
-        cout << endl;
+        if( i < cases-1) cout << endl;
     }
 
     execute_tests();     // For IDE only
