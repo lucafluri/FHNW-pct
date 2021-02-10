@@ -9,12 +9,6 @@
 
 using namespace std;
 
-void printVector(vector<int> vec){
-    for(int i : vec){
-        cout << i << " ";
-    }cout << endl;
-}
-
 vector<int> countVotes(vector<int> (&ballots)[1001], int n){
     vector<int> counts(n+1, 0);
     for(vector<int> ballot : ballots){
@@ -106,13 +100,10 @@ int main() {
 
     string tmp;
 
-    // getline(cin, tmp);
-    // cases = stoi(tmp);
     cin >> cases;
     if(cases == 0) return 0;
     while(getchar()!='\n');
     while(getchar()!='\n');
-    // getline(cin, tmp); //discard spacer line
 
     int n; //#candidates
     string candidates[20];
