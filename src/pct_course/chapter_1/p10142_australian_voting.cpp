@@ -7,22 +7,9 @@
 
 #include "../../my_libs/local_testing/string_in_out_testing.h" //IDE ONLY
 
-//Count votes DONE
-//Winner? If not: 
-    //Find lowest count number
-    //Delete all candidates with this count number
-// Redo Process until winner found
-
-
 using namespace std;
 
-void printVector(vector<int> vec){
-    for(int i : vec){
-        cout << i << " ";
-    }cout << endl;
-}
-
-vector<int> countVotes(vector<int> (&ballots)[1000], int n){
+vector<int> countVotes(vector<int> (&ballots)[1001], int n){
     vector<int> counts(n+1, 0);
     for(vector<int> ballot : ballots){
         for(int vote : ballot){
@@ -40,7 +27,6 @@ vector<int> getWinners(vector<int> &counts, int ballotCount){
     for(int i = 0; i<counts.size(); i++){
         if(counts[i] == 0) discarded++;
     }
-    // cout << discarded-1 << endl;
 
     for(int i = 1; i<counts.size(); i++){
         float p = (counts[i]/((float) ballotCount));
@@ -75,27 +61,28 @@ vector<int> findLowest(vector<int> &counts){
     vector<int> lowest;
     int min = 100;
     for(int i = 1; i<counts.size(); i++){
-        if(counts[i] != 0 && counts[i] < min){
+        if(counts[i] != -1 && counts[i] != 0 && counts[i] < min){
             lowest.clear();
             lowest.push_back(i);
             min = counts[i];
         }
-        else if(counts[i] != 0 && counts[i] == min) lowest.push_back(i);
+        else if(counts[i] != -1 && counts[i] != 0 && counts[i] == min) lowest.push_back(i);
+    }
+    // add all that have 0
+    for(int i = 1; i<counts.size(); i++){
+        if(counts[i] == 0) lowest.push_back(i);
     }
     return lowest;
 }
 
-void delVotesLowest(vector<int> (&ballots)[1000], vector<int> lowest, int ballotCount){
+void delVotesLowest(vector<int> (&ballots)[1001], vector<int> lowest, int ballotCount){
     for(int j = 0; j<ballotCount; j++){
-        // vector<int> ballot = ballots[j];
         // delete candidate
         for(int c : lowest){
             for(int i = 0; i<ballots[j].size(); i++){
                 if(ballots[j][i] == c) {
-                    ballots[j][i] = 0;
-
                     ballots[j].erase(ballots[j].begin() + i);
-                    ballots[j].push_back(0);
+                    ballots[j].push_back(-1);
                     break;
                 }
             }
@@ -112,29 +99,26 @@ int main() {
 
     getline(cin, tmp);
     cases = stoi(tmp);
-    // cases = 1;
     getline(cin, tmp); //discard spacer line
 
     
     int n; //#candidates
     string candidates[20];
-    // vector<int[]> ballots
 
     
     // per case
     for(int i = 0; i<cases; i++){
         getline(cin, tmp);
         n = stoi(tmp);
-        // cout << cases << " " << n << endl;
         // Read candidates
         for(int i = 0; i<n; i++){
             getline(cin, candidates[i]);
-            // cout << candidates[i] << endl;
         }
 
         int ballotCount = 0;
-        vector<int> ballots[1000];
+        vector<int> ballots[1001];
         int vote;
+        bool eof = false;
 
         getline(cin, tmp);
         while(!tmp.empty()){
@@ -144,20 +128,10 @@ int main() {
                 ballots[ballotCount].push_back(vote);
             }
             ballotCount++;
-            if(cin.eof()) break;
-            getline(cin, tmp);
+            if(!eof) getline(cin, tmp);
+            else break;
+            if(i == cases-1 && cin.eof()) eof = true;
         }
-
-        // // TODO
-        // if(i==19){
-        //     printf("%d\n", n);
-        //     for(string c : candidates){
-        //         cout << c << endl;
-        //     }
-        //     for(int i = 0; i<ballotCount; i++){
-        //         printVector(ballots[i]);
-        //     }
-        // }
 
         vector<int> winners;
         while(winners.size() == 0){
@@ -167,21 +141,10 @@ int main() {
 
             vector<int> lowest = findLowest(counts);
             delVotesLowest(ballots, lowest, ballotCount);
-
-            // printVector(counts);
-            // printVector(lowest);
-            // cout << "============================="<< endl;
-            // for(int i = 0; i<ballotCount; i++){
-            //     printVector(ballots[i]);
-            // }
-            // // printVector(winners);
-            // cout << "============================="<< endl;
-
         }
 
 
         printWinners(winners, candidates);
-        // cout << n << " " << ballotCount << endl;
         if( i < cases-1) cout << endl;
     }
 

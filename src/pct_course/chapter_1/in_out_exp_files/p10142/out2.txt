@@ -54,8 +54,7 @@ Herbert Hoover
 
 William Howard Taft
 
-Alben Barkley
-Charles Dawes
+Barack Obama
 
 Harry S. Truman
 
@@ -148,7 +147,7 @@ Elbridge Gerry
 
 Andrew Jackson
 
-Abraham Lincoln
+Harry S. Truman
 
 Lyndon B. Johnson
 
@@ -164,7 +163,7 @@ Zachary Taylor
 
 Harry S. Truman
 
-Abraham Lincoln
+William Howard Taft
 
 Nelson Rockefeller
 
