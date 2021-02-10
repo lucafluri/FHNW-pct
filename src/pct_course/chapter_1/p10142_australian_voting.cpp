@@ -9,6 +9,12 @@
 
 using namespace std;
 
+void printVector(vector<int> vec){
+    for(int i : vec){
+        cout << i << " ";
+    }cout << endl;
+}
+
 vector<int> countVotes(vector<int> (&ballots)[1001], int n){
     vector<int> counts(n+1, 0);
     for(vector<int> ballot : ballots){
@@ -118,34 +124,44 @@ int main() {
         int ballotCount = 0;
         vector<int> ballots[1001];
         int vote;
-        bool eof = false;
+        // bool eof = false;
+        bool hasVotes = false;
 
-        getline(cin, tmp);
-        while(!tmp.empty()){
-            stringstream votes(tmp);
-            for(int i = 0; i<n;i++){
-                votes >> vote;
-                ballots[ballotCount].push_back(vote);
+        if(!cin.eof()){
+            getline(cin, tmp);  
+            while(!tmp.empty() && ballotCount < 1000){
+                hasVotes = true;
+                stringstream votes(tmp);
+                for(int i = 0; i<n;i++){
+                    votes >> vote;
+                    ballots[ballotCount].push_back(vote);
+                }
+                ballotCount++;
+                if(cin.eof()) break;
+                getline(cin, tmp);
             }
-            ballotCount++;
-            if(!eof) getline(cin, tmp);
-            else break;
-            if(i == cases-1 && cin.eof()) eof = true;
         }
+        
 
-        vector<int> winners;
-        while(winners.size() == 0){
-            vector<int> counts = countVotes(ballots, n);
-            winners = getWinners(counts, ballotCount);
-            if(winners.size()>0) break;
+        if(hasVotes){
+            vector<int> winners;
+            while(winners.size() == 0){
+                vector<int> counts = countVotes(ballots, n);
+                winners = getWinners(counts, ballotCount);
+                if(winners.size()>0) break;
 
-            vector<int> lowest = findLowest(counts);
-            delVotesLowest(ballots, lowest, ballotCount);
+                vector<int> lowest = findLowest(counts);
+                delVotesLowest(ballots, lowest, ballotCount);
+            }
+            printWinners(winners, candidates);
+        }else{ 
+            // No votes
+            for(int i = 0; i<n;i++){
+                cout << candidates[i] << endl;
+            }
         }
-
-
-        printWinners(winners, candidates);
         if( i < cases-1) cout << endl;
+
     }
 
     execute_tests();     // For IDE only
