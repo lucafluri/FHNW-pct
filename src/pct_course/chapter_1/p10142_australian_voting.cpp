@@ -29,14 +29,15 @@ vector<int> countVotes(vector<int> (&ballots)[1001], int n){
 vector<int> getWinners(vector<int> &counts, int ballotCount){
     vector<int> winners;
     int discarded = 0;
-    float maxPerc = 0.0;
+    int maxPerc = 0;
+    const int mult = 100000;
     for(int i = 0; i<counts.size(); i++){
         if(counts[i] == 0) discarded++;
     }
 
     for(int i = 1; i<counts.size(); i++){
-        float p = (counts[i]/((float) ballotCount));
-        if(counts[i] != 0 && p > maxPerc && (p > 0.5)) {
+        int p = (counts[i]/((float) ballotCount)) * mult;
+        if(counts[i] != 0 && p > maxPerc && (p > (int)(0.5*mult))) {
             maxPerc = p;
             winners.clear();
             winners.push_back(i);
@@ -46,8 +47,9 @@ vector<int> getWinners(vector<int> &counts, int ballotCount){
     // Check for tie
     if(winners.size() == 0){
         for(int i = 1; i<counts.size(); i++){
-            float p = (counts[i]/((float) ballotCount));
-            if(counts[i] != 0 && p == (1/((float) counts.size()-discarded))) {
+            int p = (counts[i]/((float) ballotCount)) * mult;
+            int fraction = (mult/((float) counts.size()-discarded));
+            if(counts[i] != 0 && p == fraction) {
                 winners.push_back(i);
             }
         }
