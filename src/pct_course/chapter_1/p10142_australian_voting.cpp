@@ -16,6 +16,12 @@
 
 using namespace std;
 
+void printVector(vector<int> vec){
+    for(int i : vec){
+        printf("%d ", i);
+    }cout << endl;
+}
+
 vector<int> countVotes(vector<int> (&ballots)[1000], int n){
     vector<int> counts(n+1, 0);
     for(vector<int> ballot : ballots){
@@ -130,7 +136,15 @@ int main() {
             winners = getWinners(counts, ballotCount);
             if(winners.size()>0) break;
 
-            delVotesLowest(ballots, findLowest(counts));
+            vector<int> lowest = findLowest(counts);
+            delVotesLowest(ballots, lowest);
+
+            printVector(counts);
+            printVector(lowest);
+            // for(int i = 0; i<ballotCount; i++){
+            //     printVector(ballots[i]);
+            // }
+            // printVector(winners);
         }
 
 
