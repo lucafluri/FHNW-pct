@@ -168,14 +168,14 @@ int main() {
             vector<int> lowest = findLowest(counts);
             delVotesLowest(ballots, lowest, ballotCount);
 
-            printVector(counts);
-            printVector(lowest);
-            cout << "============================="<< endl;
-            for(int i = 0; i<ballotCount; i++){
-                printVector(ballots[i]);
-            }
-            // printVector(winners);
-            cout << "============================="<< endl;
+            // printVector(counts);
+            // printVector(lowest);
+            // cout << "============================="<< endl;
+            // for(int i = 0; i<ballotCount; i++){
+            //     printVector(ballots[i]);
+            // }
+            // // printVector(winners);
+            // cout << "============================="<< endl;
 
         }
 
