@@ -61,7 +61,7 @@ void printWinners(vector<int> winners, string (&candidates)[20]){
 
 vector<int> findLowest(vector<int> &counts){
     vector<int> lowest;
-    int min = 100;
+    int min = 1001;
     for(int i = 1; i<counts.size(); i++){
         if(counts[i] != -1 && counts[i] != 0 && counts[i] < min){
             lowest.clear();
