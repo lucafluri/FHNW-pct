@@ -92,6 +92,16 @@ void delVotesLowest(vector<int> (&ballots)[1001], vector<int> lowest, int ballot
     }
 }
 
+bool validBallot(vector<int> b, int n){
+    vector<bool> check(n, false);
+    for(int vote : b){
+        if(vote <= 0 || vote > n) return false;
+        else if(check[vote - 1]) return false;
+        check[vote - 1] = true;
+    }
+    return true;
+}
+
 
 int main() {
     prepare_ide("p10142");     // For IDE only
@@ -128,11 +138,17 @@ int main() {
         while(!tmp.empty()){
             hasVotes = true;
             stringstream votes(tmp);
+            vector<int> ballot;
             for(int j = 0; j<n;j++){
                 votes >> vote;
-                ballots[ballotCount].push_back(vote);
+                // cout << vote << endl;
+                ballot.push_back(vote);
             }
-            ballotCount++;
+            if(validBallot(ballot, n)){
+                ballots[ballotCount] = ballot;
+                ballotCount++;
+            }
+            ballot.clear();
             if(cin.eof()) break;
             getline(cin, tmp);
         }
