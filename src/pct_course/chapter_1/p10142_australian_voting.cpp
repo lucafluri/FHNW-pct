@@ -119,8 +119,8 @@ int main() {
         while(getchar()!='\n');
         if(n == 0) continue;
         // Read candidates
-        for(int i = 0; i<n; i++){
-            getline(cin, candidates[i]);
+        for(int j = 0; j<n; j++){
+            getline(cin, candidates[j]);
         }
 
 
@@ -128,7 +128,7 @@ int main() {
         while(!tmp.empty()){
             hasVotes = true;
             stringstream votes(tmp);
-            for(int i = 0; i<n;i++){
+            for(int j = 0; j<n;j++){
                 votes >> vote;
                 ballots[ballotCount].push_back(vote);
             }
@@ -152,8 +152,8 @@ int main() {
             printWinners(winners, candidates);
         }else{ 
             // No votes
-            for(int i = 0; i<n;i++){
-                cout << candidates[i] << endl;
+            for(int j = 0; j<n;j++){
+                cout << candidates[j] << endl;
             }
         }
         if( i < cases-1) cout << endl;
