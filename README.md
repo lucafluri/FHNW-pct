@@ -35,3 +35,66 @@ application:
 ```
 make time1 && ./out/time1
 ```
+Depending on your operating system, you might miss some libraries that are 
+necessary for a few programs. E.g., OS X does not provide POSIX `mqueue.h`, 
+thus the message queue programs won't compile on OS X. Therefore, our 
+lecturer suggested to work on a Raspberry Pi using a linux distribution.
+
+An alternative way is to compile and execute the programs in a docker container.
+You can find a `Dockerfile` in this repository which uses an ubuntu image 
+and installs the following components:
+- `gcc` compiler for C-applications
+- `g++` compiler for C++-applications
+- `make` build-tool for C/C++
+- `libc` library
+- `libncurses` library
+
+Build the image using the provided shell script:
+```
+chmod u+x docker-build.sh
+./docker-build.sh
+```
+
+Afterwards, start a container (this will directly connect you to the 
+container, so you can start hacking):
+```
+chmod u+x docker-start.sh
+./docker-start.sh
+```
+All files/directories from your working directory will be synced with the 
+container, so you can edit on your computer and compile/execute in the 
+container. Run `exit` when connected to the container to terminate the session.
+
+## Multiple Docker-connections
+If you want to have multiple terminals to the same docker, you can easily 
+do that like this: Open a new terminal window and type:
+```
+docker exec -it fhnw_pct /bin/bash
+
+# Or do once:
+chmod u+x docker-second-connection.sh
+
+# Then simply:
+./docker-second-connection.sh
+```
+This is particularly helpful for the examples like 
+`../src/mikenoethiker/fifo1.c` and `fifo2.c`.
+
+# Running in CLion
+If you want to run this project in CLion, then it is very useful for better 
+code-completion, if you do the following when creating or adding new 
+*.c - files:
+- When creating inside CLion, then make sure to choose option "add to 
+  targets", so the file gets added to `CMakeLists.txt`.
+- When importing a file, just manually add it to the list of 
+  "add_executable" inside `CMakeLists.txt`.
+
+# Notes
+
+Lecture notes can be found in markdown format in `./notes`. 
+These notes largely consist of links to the man pages of system calls but sometimes also provide complementary 
+comments and usage examples.
+
+Direct Links:
+* [...](...)
+

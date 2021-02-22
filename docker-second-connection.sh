@@ -1,0 +1,1 @@
+docker exec -it fhnw_pct /bin/bash
