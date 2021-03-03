@@ -1,6 +1,6 @@
 # About
 
-This is a collection of C programs, which I created for the FHNW-module 
+This is a collection of C++ programs, which I created for the FHNW-module 
 'pct - programming contest training'.
 
 # Build
@@ -77,8 +77,7 @@ chmod u+x docker-second-connection.sh
 # Then simply:
 ./docker-second-connection.sh
 ```
-This is particularly helpful for the examples like 
-`../src/mikenoethiker/fifo1.c` and `fifo2.c`.
+
 
 # Running in CLion
 If you want to run this project in CLion, then it is very useful for better 
@@ -88,13 +87,3 @@ code-completion, if you do the following when creating or adding new
   targets", so the file gets added to `CMakeLists.txt`.
 - When importing a file, just manually add it to the list of 
   "add_executable" inside `CMakeLists.txt`.
-
-# Notes
-
-Lecture notes can be found in markdown format in `./notes`. 
-These notes largely consist of links to the man pages of system calls but sometimes also provide complementary 
-comments and usage examples.
-
-Direct Links:
-* [...](...)
-
