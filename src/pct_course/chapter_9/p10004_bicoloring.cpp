@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unistd.h>
+#include <list>
 #include "../../my_libs/local_testing/string_in_out_testing.h"
 
 using namespace std;
@@ -10,8 +11,8 @@ using namespace std;
 typedef struct {
     int edges[MAXV+1][MAXDEG];
     int degree[MAXV+1];
-    int nvertices;
-    int nedges;
+    int nvertices = 0;
+    int nedges = 0;
 } graph;
 
 void initialize_graph(graph *g)
@@ -64,14 +65,53 @@ void print_graph(graph *g)
     }
 }
 
+void bfs(graph *g, int start) {
+    // Mark all the vertices as not visited
+    bool *visited = new bool[g->nvertices];
+    for(int i = 0; i < g->nvertices; i++)
+        visited[i] = false;
+ 
+    // Create a queue for BFS
+    list<int> queue;
+ 
+    // Mark the current node as visited and enqueue it
+    visited[start] = true;
+    queue.push_back(start);
+ 
+    // 'i' will be used to get all adjacent
+    // vertices of a vertex
+    list<int>::iterator i;
+ 
+    while(!queue.empty())
+    {
+        // Dequeue a vertex from queue and print it
+        start = queue.front();
+        cout << start << " ";
+        queue.pop_front();
+ 
+        // Get all adjacent vertices of the dequeued
+        // vertex s. If a adjacent has not been visited,
+        // then mark it visited and enqueue it
+        for (i = g->edges[start].begin(); i != g->edges[start].end(); ++i)
+        {
+            if (!visited[*i])
+            {
+                visited[*i] = true;
+                queue.push_back(*i);
+            }
+        }
+    }
 
+}
 
 int main() {
     prepare_ide("p10004");     // For IDE only
 
     graph g;
     read_graph(&g, false);
-    print_graph(&g);
+    // print_graph(&g);
+
+    bfs(&g, 0);
 
     execute_tests();     // For IDE only
 }
