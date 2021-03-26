@@ -1,56 +1,62 @@
 #include <iostream>
 #include <unistd.h>
 #include <list>
+#include <string>
+#include <vector>
 #include "../../my_libs/local_testing/string_in_out_testing.h"
 
 using namespace std;
 
-#define MAXV    200
-#define MAXDEG  200
+// #define MAXV    200
+// #define MAXDEG  200
 
 typedef struct {
-    int edges[MAXV+1][MAXDEG];
-    int degree[MAXV+1];
-    int nvertices = 0;
-    int nedges = 0;
+    vector<int> *edges;
+    // vector<int> *degree;
+    int nvertices;
+    int nedges;
 } graph;
 
-void initialize_graph(graph *g)
+void initialize_graph(graph *g, int vertices, int edges)
 {
-    int i; /* counter */
-    g -> nvertices = 0;
-    g -> nedges = 0;
-    for (i=1; i<=MAXV; i++) g->degree[i] = 0;
+    g -> nvertices = vertices;
+    g -> nedges = edges;
+    // for (int i=1; i<=vertices; i++) g->degree[i] = 0;
+    // g -> degree = new vector<int>(vertices, 0);
+    g -> edges = new vector<int>[vertices];
 }
 
-void insert_edge(graph *g, int x, int y, bool directed)
+void insert_edge(graph *g, int x, int y)
 {
-    if (g->degree[x] > MAXDEG)
-        printf("Warning: insertion(%d,%d) exceeds max degree\n",x,y);
-    g->edges[x][g->degree[x]] = y;
-    g->degree[x] ++;
-    if (directed == false)
-        insert_edge(g,y,x,true);
-    else
-        g->nedges ++;
+    // if (g->degree[x] > MAXDEG)
+        // printf("Warning: insertion(%d,%d) exceeds max degree\n",x,y);
+    g->edges[x].push_back(y);
+    // (g->degree)[x]++;
 }
 
-void read_graph(graph *g, bool directed){
-    int i=0; /* counter */
-    int m=0; /* number of edges */
+bool read_graph(graph *g){
+    string buffer;
+
+    int e=0; /* number of edges */
+    int v=0; /* number of vertces */
     int x, y; /* vertices in edge (x,y) */
-    initialize_graph(g);
     
-    scanf("%d",&(g->nvertices));
-    scanf("%d",&m);
+    scanf("%d",&v);
+    scanf("%d",&e);
 
+    initialize_graph(g, v, e);
     // printf("%d, %d\n", g->nvertices, m);
 
-    for (i=0; i<m; i++) {
+    for (int i=0; i<e; i++) {
         scanf("%d %d",&x,&y);
         // printf("%d, %d\n", x, y);
-        insert_edge(g,x,y,directed);
+        insert_edge(g,x,y);
     }
+    getline(cin, buffer);
+    // bool end = (char) cin.peek() == '0';
+    // cout << end << endl;
+    return ((char) cin.peek()) != '0';
+    // return true;
 }
 
 void print_graph(graph *g)
@@ -59,59 +65,82 @@ void print_graph(graph *g)
     int i,j; /* counters */
     for (i=0; i<g->nvertices; i++) {
         printf("%d: ",i);
-        for (j=0; j<g->degree[i]; j++)
+        for (j=0; j<g->edges[i].size(); j++)
             printf(" %d",g->edges[i][j]);
         printf("\n");
     }
 }
 
-void bfs(graph *g, int start) {
+bool bfs(graph *g, int start) {
     // Mark all the vertices as not visited
     bool *visited = new bool[g->nvertices];
-    for(int i = 0; i < g->nvertices; i++)
+    int *colored = new int[g->nvertices];
+    for(int i = 0; i < g->nvertices; i++){
         visited[i] = false;
- 
+        colored[i] = 0;
+    }
+
     // Create a queue for BFS
     list<int> queue;
- 
+
     // Mark the current node as visited and enqueue it
     visited[start] = true;
+    colored[start] = 1; //red=1, black=2
     queue.push_back(start);
- 
+
     // 'i' will be used to get all adjacent
     // vertices of a vertex
-    list<int>::iterator i;
- 
+    vector<int>::iterator i;
+
     while(!queue.empty())
     {
         // Dequeue a vertex from queue and print it
         start = queue.front();
-        cout << start << " ";
+
+        bool parent_color = colored[start];
+
+        // cout << start << " ";
         queue.pop_front();
- 
+
         // Get all adjacent vertices of the dequeued
         // vertex s. If a adjacent has not been visited,
         // then mark it visited and enqueue it
         for (i = g->edges[start].begin(); i != g->edges[start].end(); ++i)
         {
+            if(colored[*i] == parent_color) return false;
+            else colored[*i] = parent_color == 1 ? 2 : 1;
+
             if (!visited[*i])
             {
                 visited[*i] = true;
                 queue.push_back(*i);
             }
         }
-    }
 
+        
+    }
+    return true;
 }
 
 int main() {
     prepare_ide("p10004");     // For IDE only
 
     graph g;
-    read_graph(&g, false);
-    // print_graph(&g);
+    bool more = true;
+    while(more){
+        more = read_graph(&g);
+        // print_graph(&g);
 
-    bfs(&g, 0);
+        // cout << (char) cin.peek() << endl;
+
+        if(bfs(&g, 0)){
+            printf("BICOLORABLE.\n");
+        }else{
+            printf("NOT BICOLORABLE.\n");
+        }
+
+        // printf(cin.peek());
+    }
 
     execute_tests();     // For IDE only
 }
