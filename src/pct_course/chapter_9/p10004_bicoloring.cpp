@@ -31,6 +31,7 @@ void insert_edge(graph *g, int x, int y)
     // if (g->degree[x] > MAXDEG)
         // printf("Warning: insertion(%d,%d) exceeds max degree\n",x,y);
     g->edges[x].push_back(y);
+    g->edges[y].push_back(x);
     // (g->degree)[x]++;
 }
 
@@ -91,14 +92,15 @@ bool bfs(graph *g, int start) {
     // 'i' will be used to get all adjacent
     // vertices of a vertex
     vector<int>::iterator i;
+    bool parent_color;
 
     while(!queue.empty())
     {
         // Dequeue a vertex from queue and print it
         start = queue.front();
 
-        bool parent_color = colored[start];
-
+        // parent_color = colored[start];
+        // printf("parent %d: %d\n", start, colored[start]);
         // cout << start << " ";
         queue.pop_front();
 
@@ -107,8 +109,9 @@ bool bfs(graph *g, int start) {
         // then mark it visited and enqueue it
         for (i = g->edges[start].begin(); i != g->edges[start].end(); ++i)
         {
-            if(colored[*i] == parent_color) return false;
-            else colored[*i] = parent_color == 1 ? 2 : 1;
+            if(colored[*i] == colored[start]) return false;
+            else colored[*i] = colored[start] == 1 ? 2 : 1;
+            // printf("%d:%d, ", *i, colored[*i]);
 
             if (!visited[*i])
             {
@@ -116,6 +119,7 @@ bool bfs(graph *g, int start) {
                 queue.push_back(*i);
             }
         }
+        // printf("\n");
 
         
     }
