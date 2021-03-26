@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// Graph
 typedef struct {
     vector<int> *adj;
     int nvertices;
@@ -31,20 +32,20 @@ bool read_graph(graph *g){
     int x, y; // edge (x,y) 
     
     // Read in nums
-    scanf("%d",&v);
-    scanf("%d",&e);
+    cin >> v >> e;
 
     initialize_graph(g, v);
 
     // Read and insert edges into graph
     for (int i=0; i<e; i++) {
-        scanf("%d %d",&x,&y);
+        cin >> x >> y;
         insert_edge(g,x,y);
     }
     getline(cin, buffer); //Read rest of line
     return true;
 }
 
+// BFS Coloring
 bool bfs_coloring(graph *g, int start) {
     bool *visited = new bool[g->nvertices];
     int *colored = new int[g->nvertices];
