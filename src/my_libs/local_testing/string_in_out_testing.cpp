@@ -189,12 +189,12 @@ void execute_tests() {
     // Use duration_cast() function: 
     long int micro = chrono::duration_cast<chrono::microseconds>(stop - start).count();
     long int milli = micro / 1000;
+    double sec = micro / 1000.0 / 1000.0;
     micro %= 1000;
     cout << "Execution time for actual code: ";
     if (milli) cout << milli << "'";
-    cout << micro << " microseconds" << endl;
+    cout << micro << " microseconds / " << sec << " seconds" << endl;
 }
-
 
 /**
  * Helper method for writing colored text to the terminal.
