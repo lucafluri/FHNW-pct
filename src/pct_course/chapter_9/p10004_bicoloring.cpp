@@ -7,8 +7,6 @@
 
 using namespace std;
 
-// #define MAXV    200
-// #define MAXDEG  200
 
 typedef struct {
     vector<int> *edges;
@@ -73,7 +71,6 @@ void print_graph(graph *g)
 }
 
 bool bfs(graph *g, int start) {
-    // Mark all the vertices as not visited
     bool *visited = new bool[g->nvertices];
     int *colored = new int[g->nvertices];
     for(int i = 0; i < g->nvertices; i++){
@@ -81,7 +78,6 @@ bool bfs(graph *g, int start) {
         colored[i] = 0;
     }
 
-    // Create a queue for BFS
     list<int> queue;
 
     // Mark the current node as visited and enqueue it
@@ -89,39 +85,28 @@ bool bfs(graph *g, int start) {
     colored[start] = 1; //red=1, black=2
     queue.push_back(start);
 
-    // 'i' will be used to get all adjacent
-    // vertices of a vertex
-    vector<int>::iterator i;
+    // adjacent vertices of a vertex
+    vector<int>::iterator adj;
     bool parent_color;
 
     while(!queue.empty())
     {
-        // Dequeue a vertex from queue and print it
         start = queue.front();
 
-        // parent_color = colored[start];
-        // printf("parent %d: %d\n", start, colored[start]);
-        // cout << start << " ";
         queue.pop_front();
 
-        // Get all adjacent vertices of the dequeued
-        // vertex s. If a adjacent has not been visited,
-        // then mark it visited and enqueue it
-        for (i = g->edges[start].begin(); i != g->edges[start].end(); ++i)
+        // Get all adjacent vertices of the dequeued vertex
+        for (adj = g->edges[start].begin(); adj != g->edges[start].end(); ++adj)
         {
-            if(colored[*i] == colored[start]) return false;
-            else colored[*i] = colored[start] == 1 ? 2 : 1;
-            // printf("%d:%d, ", *i, colored[*i]);
+            if(colored[*adj] == colored[start]) return false;
+            else colored[*adj] = colored[start] == 1 ? 2 : 1;
 
-            if (!visited[*i])
+            if (!visited[*adj])
             {
-                visited[*i] = true;
-                queue.push_back(*i);
+                visited[*adj] = true;
+                queue.push_back(*adj);
             }
         }
-        // printf("\n");
-
-        
     }
     return true;
 }
@@ -130,20 +115,17 @@ int main() {
     prepare_ide("p10004");     // For IDE only
 
     graph g;
+
     bool more = true;
     while(more){
         more = read_graph(&g);
         // print_graph(&g);
-
-        // cout << (char) cin.peek() << endl;
 
         if(bfs(&g, 0)){
             printf("BICOLORABLE.\n");
         }else{
             printf("NOT BICOLORABLE.\n");
         }
-
-        // printf(cin.peek());
     }
 
     execute_tests();     // For IDE only
