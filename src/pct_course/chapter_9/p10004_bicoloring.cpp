@@ -7,70 +7,45 @@
 
 using namespace std;
 
-
 typedef struct {
-    vector<int> *edges;
-    // vector<int> *degree;
+    vector<int> *adj;
     int nvertices;
-    int nedges;
 } graph;
 
-void initialize_graph(graph *g, int vertices, int edges)
-{
+void initialize_graph(graph *g, int vertices) {
     g -> nvertices = vertices;
-    g -> nedges = edges;
-    // for (int i=1; i<=vertices; i++) g->degree[i] = 0;
-    // g -> degree = new vector<int>(vertices, 0);
-    g -> edges = new vector<int>[vertices];
+    g -> adj = new vector<int>[vertices];
 }
 
-void insert_edge(graph *g, int x, int y)
-{
-    // if (g->degree[x] > MAXDEG)
-        // printf("Warning: insertion(%d,%d) exceeds max degree\n",x,y);
-    g->edges[x].push_back(y);
-    g->edges[y].push_back(x);
-    // (g->degree)[x]++;
+void insert_edge(graph *g, int x, int y) {
+    g->adj[x].push_back(y);
+    g->adj[y].push_back(x); //All graphs are undirected
 }
 
 bool read_graph(graph *g){
-    string buffer;
+    if((char) cin.peek() == '0') return false;
 
-    int e=0; /* number of edges */
-    int v=0; /* number of vertces */
-    int x, y; /* vertices in edge (x,y) */
+    string buffer;
+    int e=0; // number of edges 
+    int v=0; // number of vertices 
+    int x, y; // edge (x,y) 
     
+    // Read in nums
     scanf("%d",&v);
     scanf("%d",&e);
 
-    initialize_graph(g, v, e);
-    // printf("%d, %d\n", g->nvertices, m);
+    initialize_graph(g, v);
 
+    // Read and insert edges into graph
     for (int i=0; i<e; i++) {
         scanf("%d %d",&x,&y);
-        // printf("%d, %d\n", x, y);
         insert_edge(g,x,y);
     }
-    getline(cin, buffer);
-    // bool end = (char) cin.peek() == '0';
-    // cout << end << endl;
-    return ((char) cin.peek()) != '0';
-    // return true;
+    getline(cin, buffer); //Read rest of line
+    return true;
 }
 
-void print_graph(graph *g)
-{
-    printf("%d::%d\n", g->nvertices, g->nedges);
-    int i,j; /* counters */
-    for (i=0; i<g->nvertices; i++) {
-        printf("%d: ",i);
-        for (j=0; j<g->edges[i].size(); j++)
-            printf(" %d",g->edges[i][j]);
-        printf("\n");
-    }
-}
-
-bool bfs(graph *g, int start) {
+bool bfs_coloring(graph *g, int start) {
     bool *visited = new bool[g->nvertices];
     int *colored = new int[g->nvertices];
     for(int i = 0; i < g->nvertices; i++){
@@ -79,30 +54,31 @@ bool bfs(graph *g, int start) {
     }
 
     list<int> queue;
+    int vertex = start;
 
-    // Mark the current node as visited and enqueue it
-    visited[start] = true;
-    colored[start] = 1; //red=1, black=2
-    queue.push_back(start);
+    // Mark vertex as visited, add to queue
+    visited[vertex] = true;
+    queue.push_back(vertex);
 
+    // Color first vertex red
+    colored[vertex] = 1; //red=1, black=2
+    
     // adjacent vertices of a vertex
     vector<int>::iterator adj;
-    bool parent_color;
 
     while(!queue.empty())
     {
-        start = queue.front();
-
+        vertex = queue.front();
         queue.pop_front();
 
         // Get all adjacent vertices of the dequeued vertex
-        for (adj = g->edges[start].begin(); adj != g->edges[start].end(); ++adj)
-        {
-            if(colored[*adj] == colored[start]) return false;
-            else colored[*adj] = colored[start] == 1 ? 2 : 1;
+        for (adj = g->adj[vertex].begin(); adj != g->adj[vertex].end(); ++adj) {
+            // Not Bicolorable if neighbouring nodes have same color
+            // => stop bfs, else color neighbours in opposite color
+            if(colored[*adj] == colored[vertex]) return false;
+            else colored[*adj] = colored[vertex] == 1 ? 2 : 1;
 
-            if (!visited[*adj])
-            {
+            if (!visited[*adj]) {
                 visited[*adj] = true;
                 queue.push_back(*adj);
             }
@@ -116,12 +92,8 @@ int main() {
 
     graph g;
 
-    bool more = true;
-    while(more){
-        more = read_graph(&g);
-        // print_graph(&g);
-
-        if(bfs(&g, 0)){
+    while(read_graph(&g)){
+        if(bfs_coloring(&g, 0)){
             printf("BICOLORABLE.\n");
         }else{
             printf("NOT BICOLORABLE.\n");
