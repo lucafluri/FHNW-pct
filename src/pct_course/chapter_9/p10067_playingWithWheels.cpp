@@ -29,7 +29,7 @@ int bfs() {
             if(d < 9) tmp = v + pow(10, i);
             if(d == 9) tmp = v + pow(10, i) - pow(10, i+1);
 
-            if(!c[tmp] && tmp < 10000 && !f[tmp]){
+            if(!c[tmp] && !f[tmp]){
                 c[tmp] = c[v] + 1;
                 queue.push_back(tmp);
             } 
@@ -37,7 +37,7 @@ int bfs() {
             if(d > 0) tmp = v - pow(10, i);
             if(d == 0) tmp = v + 9*pow(10, i);
 
-            if(!c[tmp] && tmp >= 0 && !f[tmp]){
+            if(!c[tmp] && !f[tmp]){
                 c[tmp] = c[v] + 1;
                 queue.push_back(tmp);
             }
