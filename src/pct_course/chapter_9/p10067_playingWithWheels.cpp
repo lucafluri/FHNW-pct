@@ -1,50 +1,54 @@
 #include <iostream>
 #include <unistd.h>
-#include <list>
+#include <queue>
 #include <cstring>
-#include <math.h>
 #include "../../my_libs/local_testing/string_in_out_testing.h"
 
 using namespace std;
 
 int N, s, t, F, tmp, d, v, i;
 int c[10000];
-int f[10000];
+
+int p(int b){
+    if(b==0) return 1;
+    else if(b==1) return 10;
+    else if(b==2) return 100;
+    else if(b==3) return 1000;
+    else return 10000;
+}
 
 int bfs() {
-    list<int> queue;
+    queue<int> queue;
 
     c[s] = 1;
-    queue.push_back(s);
+    queue.push(s);
 
     while(!queue.empty()){
         v = queue.front();
-        queue.pop_front();
+        queue.pop();
 
         if(v == t) return c[v] -1;
 
         // Find all nums differing by 1 digit
         for(i = 0; i < 4 ; i++){
-            d =(int)(v / pow(10, i)) % 10; //digit
-            if(d < 9) tmp = v + pow(10, i);
-            if(d == 9) tmp = v + pow(10, i) - pow(10, i+1);
+            d =(int)(v / p(i)) % 10; //digit
 
-            if(!c[tmp] && !f[tmp]){
+            if(d < 9) tmp = v + p(i);
+            if(d == 9) tmp = v + p(i) - p(i+1);
+
+            if(c[tmp] == 0){
                 c[tmp] = c[v] + 1;
-                queue.push_back(tmp);
+                queue.push(tmp);
             } 
             
-            if(d > 0) tmp = v - pow(10, i);
-            if(d == 0) tmp = v + 9*pow(10, i);
+            if(d > 0) tmp = v - p(i);
+            if(d == 0) tmp = v + 9*p(i);
 
-            if(!c[tmp] && !f[tmp]){
+            if(c[tmp] == 0){
                 c[tmp] = c[v] + 1;
-                queue.push_back(tmp);
+                queue.push(tmp);
             }
-            
-            
         }
-
     }
     return -1;
 }
@@ -54,7 +58,7 @@ int getNum(){
     d = 0;
     for(i = 3; i>=0; i--){
         cin >> tmp;
-        d += tmp * pow(10, i);
+        d += tmp * p(i);
     }
     return d;
 }
@@ -67,13 +71,12 @@ int main() {
 
     while(N--){
         memset(c, 0, sizeof(c));
-        memset(f, 0, sizeof(f));
 
         s = getNum();
         t = getNum();
 
         cin >> F;
-        while(F--) f[getNum()] = 1;
+        while(F--) c[getNum()] = -1;
 
         if(s == t){
             cout << 0 << endl;
