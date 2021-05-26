@@ -5,16 +5,16 @@
 
 using namespace std;
 
-int T, x, y, r, tx, ty;
+int T, x, y, r;
+double a, b, c, d1, d2;
+double A[2];
+double B[2];
 
-struct vect{
-    double x;
-    double y;
-};
 
 double dist(double x, double y){
     return sqrt(x*x + y*y);
 }
+
 
 int main() {
     prepare_ide("BLMIRINA");     // For IDE only
@@ -23,36 +23,27 @@ int main() {
     while(T--){
         cin >> x >> y >> r;
 
-        double d = dist(x, y);
+        a = 1 + ((x*x)/(y*y));
+        b = -((2*(r*r)*x)/(y*y));
+        c = ((r*r*r*r)/(y*y)) - (r*r);
+
+        A[0] = (-b + sqrt((b*b)-(4*a*c))) / (2*a);
+        A[1] = (-b - sqrt((b*b)-(4*a*c))) / (2*a);
+
+        B[0] = ((r*r)-(A[0]*x))/y;
+        B[1] = ((r*r)-(A[1]*x))/y;
 
 
-        float m1 = 
-
-        vect v1;
-        v1.x = x + (-x / d) * r;
-        v1.y = y + (y / d) * r;
-
-        vect v2;
-        v2.x = x + (x / d) * r;
-        v2.y = y + (-y / d) * r;
-
-        double d1 = dist(v1.x, v1.y);
-        double d2 = dist(v2.x, v2.y);
+        d1 = dist(A[0], B[0]);
+        d2 = dist(A[1], B[1]);
 
         if(d1 > d2){
-            cout << v1.x << " " << v1.y << endl;
+            cout << A[0] << " " << B[0] << endl;
         }
         else{
-            cout << v2.x << " " << v2.y << endl;
+            cout << A[1] << " " << B[1] << endl;
         }
-
-
-
-        // float alpha = asin(y/d);
-
     }
-    
-
     execute_tests();     // For IDE only
 }
 
