@@ -37,10 +37,10 @@ void dfs(int v, int cmin){
 }
 
 void fw(){
-    for(i=1; i<=N; i++){
-        for(j=1; j<=N; j++){
-            for(k=1; k<=N; k++){
-                adj[j][k] = adj[k][j] = max(adj[j][k], min(adj[j][i], adj[i][k]));
+    for(k=1; k<=N; k++){
+        for(i=1; i<=N; i++){
+            for(j=1; j<=N; j++){
+                adj[i][j] = adj[j][i] = max(adj[i][j], min(adj[i][k], adj[k][j]));
             }
         }
     }
