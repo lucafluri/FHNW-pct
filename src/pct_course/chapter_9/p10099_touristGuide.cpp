@@ -7,21 +7,21 @@
 
 using namespace std;
 
-int N=1, R=1, S, D, T, i, j, tmp, c=1, p=0;
+int N=1, R=1, S, D, T, i, j, k, c=1, p=0;
 int adj[101][101]; //Adjacency Matrix, Row 0 used as marked
 
 
 void readEdge(){
-    cin >> i >> j >> tmp;
-    adj[i][j] = tmp;
-    adj[j][i] = tmp;
+    cin >> i >> j >> k;
+    adj[i][j] = k;
+    adj[j][i] = k;
 }
 
 
-int dfs(int v, int cmin){
+void dfs(int v, int cmin){
     if(v == D) { //Found destination
-    // cout << "FOUND" << endl;
-        return cmin; 
+        if(cmin > p) p = cmin;
+        return; 
     }
 
     adj[0][v] = 1; //Mark current node as visited
@@ -29,17 +29,22 @@ int dfs(int v, int cmin){
     //Loop though all neighbours not visited
     for(int i=1; i<=N; i++){
         if(!adj[0][i] && adj[v][i]){
-            // cout << v << " " << i << " " << adj[v][i] << endl;
-            if(adj[v][i] < cmin) cmin = adj[v][i];
-            int tmp = dfs(i, cmin);
-            if(tmp && tmp > p){
-                p = tmp;                
-            } 
-            adj[0][i] = 0;
+            dfs(i, adj[v][i] < cmin? adj[v][i] : cmin);
+            adj[0][i] = 0; //Mark visited node as unvisited after visit
         }
     }
     
-    return p > 0? p : 0;
+}
+
+void fw(){
+    for(i=1; i<=N; i++){
+        for(j=1; j<=N; j++){
+            for(k=1; k<=N; k++){
+                adj[j][k] = adj[k][j] = max(adj[j][k], min(adj[j][i], adj[i][k]));
+            }
+        }
+    }
+    p = adj[S][D];
 }
 
 void printResult(int i, int j){
@@ -47,8 +52,8 @@ void printResult(int i, int j){
     cout << "Minimum Number of Trips = " << j << endl << endl;
 }
 
-int minTrips(int m){
-    return ceil(T / (double) (m-1));
+int minTrips(){
+    return ceil(T / (double) (p-1));
 }
 
 void clear(){
@@ -60,8 +65,6 @@ void clear(){
 
 int main() {
     prepare_ide("p10099");     // For IDE only
-    // Fill adjacency matrix
-    
 
     while(true){
         clear();
@@ -71,15 +74,13 @@ int main() {
             readEdge();
         }
         cin >> S >> D >> T;
-        tmp = dfs(S, INT_MAX);
+        // dfs(S, INT_MAX);
+        fw();
         // cout << tmp << ": ";
-        printResult(c, minTrips(tmp));
-
-
+        printResult(c, minTrips());
 
         c++;
     }
-    
 
     execute_tests();     // For IDE only
 }
