@@ -74,9 +74,10 @@ int main() {
             readEdge();
         }
         cin >> S >> D >> T;
+
         // dfs(S, INT_MAX);
         fw();
-        // cout << tmp << ": ";
+
         printResult(c, minTrips());
 
         c++;
