@@ -33,9 +33,9 @@ void dfs(int v, int cmin){
             adj[0][i] = 0; //Mark visited node as unvisited after visit
         }
     }
-    
 }
 
+// Floyd Warshall Algorithm
 void fw(){
     for(k=1; k<=N; k++){
         for(i=1; i<=N; i++){
