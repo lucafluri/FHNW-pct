@@ -3,3 +3,9 @@ Maze #1:
 
 Maze #2:
 There are no cycles.
+
+Maze #3:
+There are no cycles.
+
+Maze #4:
+There are no cycles.
