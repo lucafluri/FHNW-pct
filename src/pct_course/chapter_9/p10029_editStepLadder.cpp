@@ -27,7 +27,7 @@ int main() {
         length = 1;
         int size = a.size();
         // Add char (at i => go to <= a.size() to add last after)
-        if(a.size() < 16){
+        if(size < 16){
             for(i = 0; i<=size; i++){
                 for(c = 'a'; c <= 'z'; c++){
                     b = string(a);
