@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <map>
 #include <string>
+#include <algorithm>
 #include "../../my_libs/local_testing/string_in_out_testing.h"
 
 using namespace std;
@@ -30,8 +31,9 @@ int main() {
                 for(c = 'a'; c <= 'z'; c++){
                     b = string(a);
                     b.insert(i, 1, c);
+                    
                     if(lengths.count(b)){ //word already exists in map
-                        length = lengths[b]+1 > length ? lengths[b]+1 : length;
+                        length = max(length, lengths[b]+1);
                     }
                 }
             }         
@@ -40,9 +42,10 @@ int main() {
         // Delete char
         for(i = 0; i<a.size(); i++){
             b = string(a);
-            b.erase(i);
+            b.erase(i, 1);
+
             if(lengths.count(b)){ //word already exists in map
-                length = lengths[b]+1 > length ? lengths[b]+1 : length;
+                length = max(length, lengths[b]+1);
             }
         }  
 
@@ -52,14 +55,15 @@ int main() {
                 if(c == b[i]) continue;
                 b = string(a);
                 b[i] = c;
+
                 if(lengths.count(b)){ //word already exists in map
-                    length = lengths[b]+1 > length ? lengths[b]+1 : length;
+                    length = max(length, lengths[b]+1);
                 }
             }
         }  
 
         lengths[a] = length;
-        maxLength = length > maxLength ? length : maxLength;
+        maxLength = max(length, maxLength);
     }
     
     cout << maxLength << endl;
