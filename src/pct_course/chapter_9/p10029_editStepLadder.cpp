@@ -25,13 +25,14 @@ int main() {
     
     while(cin >> a){
         length = 1;
-        // Add char (before i => go to <= a.size() to add last after)
+        int size = a.size();
+        // Add char (at i => go to <= a.size() to add last after)
         if(a.size() < 16){
-            for(i = 0; i<=a.size(); i++){
+            for(i = 0; i<=size; i++){
                 for(c = 'a'; c <= 'z'; c++){
                     b = string(a);
                     b.insert(i, 1, c);
-                    
+
                     if(lengths.count(b)){ //word already exists in map
                         length = max(length, lengths[b]+1);
                     }
@@ -40,17 +41,20 @@ int main() {
         }
 
         // Delete char
-        for(i = 0; i<a.size(); i++){
-            b = string(a);
-            b.erase(i, 1);
+        if(size > 1){
+            for(i = 0; i<size; i++){
+                b = string(a);
+                b.erase(i, 1);
 
-            if(lengths.count(b)){ //word already exists in map
-                length = max(length, lengths[b]+1);
-            }
-        }  
+                if(lengths.count(b)){ //word already exists in map
+                    length = max(length, lengths[b]+1);
+                }
+            }  
+        }
+        
 
         // Edit char
-        for(i = 0; i<a.size(); i++){
+        for(i = 0; i<size; i++){
             for(c = 'a'; c <= 'z'; c++){
                 if(c == b[i]) continue;
                 b = string(a);
