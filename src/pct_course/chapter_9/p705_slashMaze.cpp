@@ -11,12 +11,12 @@ using namespace std;
 int n, w, h, k;
 string tmp;
 
-int maze[150][150]; //adjacency list
-int adj[22000][2]; //adjacency list
+int maze[225][225]; //maze matrix
+int adj[22000][8]; //adjacency list, 8 slots, only 2 can be 1
 
 
 void clear(){
-    for(int i = 0; i<75; i++){
+    for(int i = 0; i<225; i++){
         memset(maze[i], 0, sizeof(maze[i]));
     }
     k=0; //# of loops
@@ -49,39 +49,28 @@ int main() {
 
         // Build Maze Matrix
         for(int i = 0; i < h; i++){
-                cin >> tmp; // get line
-                for(int j = 0; j < w; j++){
-                    if(tmp[j] == '/'){
-                        //  |1 2| 
-                        //  |3 4|
-                        maze[i*2][j*2] = 1;
-                        maze[i*2][j*2+1] = 0;
-                        maze[i*2+1][j*2] = 1;
-                        maze[i*2+1][j*2+1] = 0;
-                    }
-                    else if(tmp[j] == '\\'){
-                        maze[i*2][j*2] = 0;
-                        maze[i*2][j*2+1] = 1;
-                        maze[i*2+1][j*2] = 0;
-                        maze[i*2+1][j*2+1] = 1;
-                    }
+            cin >> tmp; // get line
+            for(int j = 0; j < w; j++){
+                if(tmp[j] == '\\'){
+                    maze[i*3][j*3] = maze[i*3+1][j*3+1] = maze[i*3+2][j*3+2] = 1;
                 }
-        }
-
-        // Build adj list?
-        for(int i = 1; i < h-1; i++){
-            for(int j = 1; j < w-1; j++){
-                
-                if(maze[i][j]){
-                    // Check all 4 directions
-                    if()
-                    // Check diagonals, check for wall
+                else if(tmp[j] == '/'){
+                    maze[i*3][j*3+2] = maze[i*3+1][j*3+1] = maze[i*3+2][j*3] = 1;
                 }
-                
             }
         }
 
-        // Use DFS to find longest cycle
+        // Floodfill and count cycles => /=3
+        
+        // // Print adj list
+        // for(int i = 0; i<h*3; i++){
+        //     // cout << i << ": ";
+        //     for(int j = 0; j<w*3; j++){
+        //         cout << maze[i][j] << " ";
+        //     }
+        //     cout << endl;
+        // }
+
 
     }
 
