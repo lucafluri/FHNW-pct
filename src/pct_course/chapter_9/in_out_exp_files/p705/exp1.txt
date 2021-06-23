@@ -9,3 +9,6 @@ There are no cycles.
 
 Maze #4:
 There are no cycles.
+
+Maze #5:
+There are no cycles.
