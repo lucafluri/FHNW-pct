@@ -1,4 +1,5 @@
-2 3
+2 
+3
 Ulm Muenchen 17 2
 Ulm Muenchen 19 12
 Ulm Muenchen 5 2
