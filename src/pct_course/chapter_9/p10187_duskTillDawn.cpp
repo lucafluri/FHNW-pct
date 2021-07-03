@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <queue>
+#include <limits.h>
 
 
 #include "../../my_libs/local_testing/string_in_out_testing.h"
@@ -21,7 +22,11 @@ int n, c, res;
 string start, dest;
 map<string, int> cities; //map string city to int for adj list
 
-Connection graph[1000][1000]; //adj list
+int cityCounter = 0;
+int connCounter = 0;
+
+int graphM[1000][1000];
+
 Connection connections[1000]; //Array with all connections
 
 
@@ -33,6 +38,51 @@ bool connEmpty(Connection c){
     return c.st == c.et;
 }
 
+int connsCatchable(Connection a, Connection b){
+    if(a.et <24 && a.et >=19){
+        if(b.st < 24 && b.st >=19 && a.et < b.st) return 0;
+        else if(b.st >=0 && b.st <=6) return 0;
+    }else if(a.et >=0 && a.et <=6){
+        if(b.st >=0 && b.st <=6 && a.et <= b.st) return 0;
+    }
+    return 1;
+}
+
+
+int minDistance(int dist[], bool sptSet[]) {
+    int min = INT_MAX, min_index;
+    for (int v = 0; v < 1000; v++)
+    if (sptSet[v] == false && dist[v] <= min)
+        min = dist[v], min_index = v;
+    return min_index;
+}
+
+int dijkstra(int src) {
+    int dist[1000];
+    bool sptSet[1000];
+    for (int i = 0; i < 1000; i++)
+        dist[i] = INT_MAX, sptSet[i] = false;
+        dist[src] = 0;
+    for (int count = 0; count < 1000 - 1; count++) {
+        int u = minDistance(dist, sptSet);
+        sptSet[u] = true;
+        for (int v = 0; v < 1000; v++)
+            if (!sptSet[v] && graphM[u][v] != -1 && dist[u] != INT_MAX && dist[u] + graphM[u][v] < dist[v]) dist[v] = dist[u] + graphM[u][v];
+    }
+    // res = dist[cities[dest]];
+
+    // printSolution(dist);
+    // Return lowest #blood
+    // iterete over all conns that have dest as dest and return lowest
+    int min = INT_MAX;
+    for(int i = 0; i < 1000; i++){
+        if(dist[i] == INT_MAX) continue;
+        if(connections[i].dest == cities[dest] && dist[i] < min) min = dist[i];
+    }
+    return min;
+}
+
+
 int main() {
     prepare_ide("p10187");     // For IDE only
     
@@ -40,8 +90,15 @@ int main() {
     cin >> n;
     while(n--){ //foreach testcase
         cin >> c;
-        int cityCounter = 0;
-        int connCounter = 0;
+        cityCounter = 0;
+        connCounter = 0;
+        for(int i = 0; i<1000; i++){
+            memset(graphM[i], -1, sizeof(graphM[i]));
+            connections[i] = Connection();
+        }
+        cities.clear();
+        res = 0;
+
         while(c--){ //for each connection
             string c1, c2;
             int dep, dur;
@@ -70,13 +127,16 @@ int main() {
         cin >> start >> dest;
 
         // No valid connections or start and dest not reachable
+        
+        if(start == dest) {
+            cout << "Test Case " << counter++ << "." << endl;
+            cout << "Vladimir needs 0 litre(s) of blood." << endl;
+            continue;
+        }
         if(!cityCounter || !cities.count(start) || !cities.count(dest)) {
             cout << "Test Case " << counter++ << "." << endl;
             cout << "There is no route Vladimir can take." << endl;
-        }
-        else if(start == dest) {
-            cout << "Test Case " << counter++ << "." << endl;
-            cout << "Vladimir needs 0 litre(s) of blood." << endl;
+            continue;
         }
 
         // Build graph with connections (structs)
@@ -86,60 +146,42 @@ int main() {
             for(int j = 0; j<connCounter; j++){
                 if(j==i) continue;
 
-                int size = 0;
-                for(int k = 0; k<connCounter; k++){
-                    if(connEmpty(graph[i][k])) break;
-                    size++;
-                }
-
                 // TODO Add connections to graph by start and dest not times
                 if(conn.dest == connections[j].start){
-                    // // TODO REMOVE PRINT
-                    // cout << i << ": ";
-                    // printConn(conn);
-                    // cout << " -> ";
-                    // printConn(connections[j]);
-                    // cout << " SIZE " << size << endl;
-
-
-                    graph[i][size] = connections[j];
+                    graphM[i][j] = connsCatchable(conn, connections[j]);
                 }
             }
         }
 
-        // TODO Traverse graph with DFS, save all paths between start and dest
-        // Go through every path and find shortest route in days
+        // TODO DIJKSTRA and find shorted weighted path => weight sum = litre of blood
+        // Dijkstra for every conn that has start as start adn find lowest res
+        int min = INT_MAX;
 
 
-        // TODO PRINTS
+        for(int i = 0; i<connCounter; i++){
+            // if(connEmpty(connections[i]) || connections[i].st != cities[start]) continue;
+            if(connections[i].start == cities[start]) {
+                // printConn(connections[i]);
+                // cout << endl;
 
-        // for(int i = 0; i < connCounter; i++){
-        //     Connection tmp = connections[i];
-        //     cout << i << ":: " << tmp.start << " " << tmp.dest << " " << tmp.st << " " << tmp.et <<endl;
-        // }
-        // TODO print graph
-        for(int i = 0; i < connCounter; i++){
-            // Connection tmp = connections[i];
-            // cout << tmp.start << " " << tmp.dest << " " << tmp.st << " " << tmp.et <<endl;
-            int size = sizeof(graph[i])/sizeof(graph[i][0]);
-            if(size > 0){
-                if(!connEmpty(connections[i])) {
-                    printConn(connections[i]);
-                    cout << ":: ";
-
-                    // cout << i << ":: ";
-                    for(int j = 0; j<connCounter; j++){
-                        Connection tmp = graph[i][j];
-                        if(!connEmpty(tmp)) {
-                            printConn(tmp);
-                            cout << " ";
-                        }
-                    }
-                    cout << endl;
-                }
+                int tmp = dijkstra(i);
+                // cout << tmp << endl;
+                if(tmp < min) min = tmp;
             }
 
         }
+        // res = dijkstra(cities[start]);
+        // cout << cities[start] << " -> " << cities[dest] << endl;
+        // cout << min << endl;
+        if(min == INT_MAX){
+            cout << "Test Case " << counter++ << "." << endl;
+            cout << "There is no route Vladimir can take." << endl;
+        }else{
+            cout << "Test Case " << counter++ << "." << endl;
+            cout << "Vladimir needs " << min << " litre(s) of blood." << endl;
+        }
+        
+
 
 
     }

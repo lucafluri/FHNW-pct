@@ -1,4 +1,4 @@
-2 
+4 
 3
 Ulm Muenchen 17 2
 Ulm Muenchen 19 12
@@ -16,3 +16,12 @@ Sibiu Medias 20 3
 Reghin Medias 20 4
 Reghin Bacau 24 6
 Lugoj Bacau
+2
+Berlin Paris 18 4
+Paris Madrid 0 5
+Berlin Madrid
+3
+qhsd iqmpnfkcyghg 5 5
+t uvehbv 7 6
+seewxvtfmznobypw qvivdykvlpf 5 5
+f f
